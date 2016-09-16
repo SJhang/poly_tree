@@ -1,39 +1,39 @@
+require 'byebug'
+
 class Node
   attr_accessor :parent, :children
+  attr_reader :value
 
-  def initialize(value)
+  def initialize(value="new_node")
     @value = value
     @parent = nil
     @children = Array.new
   end
 
-  def get_parent
-    @parent
-  end
-
-  def get_children
-    @children
-  end
-
   def remove_child(node)
-    @children.delete_if {|child| child == node}
+    if @children.include?(node)
+      @children.delete(node)
+    else
+      raise
+    end
   end
 
-  def get_value
-    @value
-  end
 
-  def set_parent=(node)
+
+  def parent=(node)
     if @parent.nil?
+      #delete current nodes kids before we set new parent.
       @parent = node
+      @parent.add_child(self) unless @parent == nil
     else
       @parent.remove_child(self)
       @parent = node
+      @parent.add_child(self) unless @parent == nil
     end
-    @parent.add_child(self)
   end
 
   def add_child(node)
-    @children << node
+    @children << node unless @children.include?(node)
+    node.parent = self unless node.parent == self
   end
 end
