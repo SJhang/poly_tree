@@ -15,11 +15,25 @@ class Node
     @children
   end
 
+  def remove_child(node)
+    @children.delete_if {|child| child == node}
+  end
+
   def get_value
     @value
   end
 
   def set_parent=(node)
-    @parent = node
+    if @parent.nil?
+      @parent = node
+    else
+      @parent.remove_child(self)
+      @parent = node
+    end
+    @parent.add_child(self)
+  end
+
+  def add_child(node)
+    @children << node
   end
 end
